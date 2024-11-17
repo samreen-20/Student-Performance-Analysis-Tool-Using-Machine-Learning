@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Performance Analysis</title>
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    
+    <!-- Font Awesome Icons (optional for icons like prediction button) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img width="64" height="64" src="https://img.icons8.com/wired/64/1A1A1A/student-center.png" alt="student-center"/>
+            <span>Student Performance Analysis</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Upload</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">View</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Preprocessing</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Model Training</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">EDA Section</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-primary" href="#">Prediction</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Banner Section -->
+    <section class="banner">
+        <div class="container text-center">
+            <h1>Student Performance Analysis Using Machine Learning</h1>
+            <p>This project is completely based on machine learning and we have performed different types of ML algorithms to predict whether the student is going to pass or fail.</p>
+            <a href="#" class="btn btn-primary">Let's Start</a>
+        </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="upload-section">
+        <div class="container text-center">
+            <h2>Upload Your Data Set</h2>
+
+            <form id="uploadForm" enctype="multipart/form-data" action="/upload" method="POST">
+                <label for="algorithm">Select Algorithm:</label>
+                <select id="algorithm" name="algorithm">
+                    <option value="decision_tree">Decision Tree</option>
+                    <option value="random_forest">Random Forest</option>
+                    <option value="xgboost">XGBoost</option>
+                </select>
+                <br><br>
+                <input type="file" id="datasetFile" name="file" accept=".csv" required>
+                <br><br>
+                <input type="submit" value="Upload">
+            </form>
+
+            <!-- Updated: Initially empty status message -->
+            <p class="upload-status"></p> 
+            <p>Student Performance Analysis with the help of Machine Learning</p>
+        </div>
+    </section>
+
+    <!-- Brief Explanation Section -->
+    <section class="explanation">
+        <div class="container text-center">
+            <h2>Brief Explanation About Decision Tree</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <img width="50" height="50" src="https://img.icons8.com/ios-filled/50/decision-making.png" alt="decision-making"/>
+                </div>
+                <div class="col-md-6">
+                    <p>The Decision Tree Algorithm is one of the most popular machine learning algorithms used for classification tasks. It works by splitting the dataset into subsets based on feature values.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer bg-light">
+        <div class="container text-center">
+            <p>&copy; 2024 Student Performance Analysis. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JS Files -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> <!-- Use full version of jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!-- JS for handling the form submission -->
+    <script>
+        document.getElementById('uploadForm').onsubmit = function(event) {
+            event.preventDefault();  // Prevent the default form submission
+
+            const fileInput = document.getElementById('datasetFile');
+            const algorithmSelect = document.getElementById('algorithm');
+            const formData = new FormData();
+            
+            // Append the selected algorithm and file to the FormData object
+            formData.append('algorithm', algorithmSelect.value);
+            formData.append('file', fileInput.files[0]);
+
+            // Send the file and algorithm to the server
+            fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.querySelector('.upload-status').innerText = 'File uploaded and processed successfully: ' + data.result;
+                } else {
+                    document.querySelector('.upload-status').innerText = 'Error: ' + data.message;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.querySelector('.upload-status').innerText = 'File upload failed.';
+            });
+        };
+    </script>
+</body>
+</html>
